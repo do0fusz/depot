@@ -1,7 +1,7 @@
 
 # personal notes on the Agile web 4 book.
 
-### TESTING page 104: chapter 8, task: c.
+### TESTING references.
 
 ```ruby
 require 'test_helper'
@@ -11,6 +11,14 @@ class TheControllerTest < ActionController::TestCase
         assert_response :success
         assert_select '#main #jumbotron', minimum: 1
     end     
+
+    #controller test
+    test "should create line_item" do 
+        assert_difference('LineItem.count') do 
+            post :create, product_id: products(:ruby).id 
+        end
+        assert_redirected_to cart_path(assigns(:line_item).cart)
+    end
 end
 ```
 
@@ -102,14 +110,25 @@ end
 `button_to` method will correspond to the 'post request/action' : `create`. 
 
 We are going to use the **Module** we created earlier to set the Cart_id.
+after that, update the 'create' action.
 
 ```ruby 
 class LineItemsController< ApplicationController 
     //
     include CurrentCart  #the earlier created CurrentCart Module. 
     before_action :set_cart, only: [:create] # the method for setting the cart
+
+    //
+    def create
+        product = Product.find(params[:product_id])
+        @line_item = @cart.line_items.build(product: product)
+    # the button was set to serve the product in the params. because the cart is set, you can now make a line item trough the carts associations. so, since a cart has a line item and a line item belongs to a cart, and to a product. 
+    # The BUILD method will build the object @line_item through the cart item and the product
 ```
 
+Params are important in rails, they hold the parameters handled between browser requests and controllers. 
+In this case we store the corresponding Product.find('item') from the :product_id out of the params in a variable product.
+Then we pass the product to the @cart.line_items.build. to create the relation between the @cart object and the product object. 
 
 
 

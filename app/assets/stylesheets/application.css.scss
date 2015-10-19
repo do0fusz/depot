@@ -21,15 +21,18 @@
 	font: small-caps 40px/40px "Times New Roman", serif;
 	color: #282;
 	text-align: center ;
-	.image{
-		float: left;
-	}
+
 	img{
+		float: left ; 
+	}
+
+	a{
 		float: left ;
+		img {
+		width: 100px;
+		}
 	}
-	img.image{
-		float: left;
-	}
+	
 }
 
 #notice{ 
