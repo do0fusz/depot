@@ -278,6 +278,63 @@ end
 
 
 
+
+
+### Safety, errors, logs.. 
+Just like sessions, rails provide logger as a system used function. 
+Just like sessions, you can access logger almost anywhere.
+
+Now, a user submits an invalid cart id, let's safely construct a way to capture the error, redirect the user, and log it!
+
+
+```ruby 
+Class CartsController < ApplicationController
+    
+    # tell the controller to rescue from ActiveRecord::RecordNotFound
+    rescue_from ActiveRecord::RecordNotFound, with: :invalid_cart
+
+    // shizzle
+
+    private
+
+    def invalid_cart
+        logger.error "Attempt to access invalid cart #{paramd[:id]}"
+        redirect_to store_url, notice: 'Invalid cart'
+    end
+```
+
+
+### Emtying the cart
+Again, we are going to use the button_to because of the action we need to do.
+But, we give the button the method: :delete to overrule the standard put request. 
+
+The html bits speak for them self, so i'll skip them.
+Lets have a look at the controller:
+
+
+```ruby 
+def destroy
+    @cart.destroy 
+end
+```
+
+How can we make this more 'safe' ? 
+We know the session holds the :cart_id,
+and the button params holds the :cart_id to.. 
+aha eureka! 
+```ruby 
+def destroy
+    @cart.destroy if @cart.id == session[:cart_id]
+
+    # and while we are at it, lets clear the cart session totally 
+    session[:cart_id] = nil 
+end
+```
+
+
+
+
+
 ```ruby 
 def beer(drinks)
     puts "hi beer"
