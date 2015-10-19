@@ -147,12 +147,30 @@ rails g migration add_quantity_to_line_items quantity:intger
 
 Meditation time, which controller should be modified, and which model? 
 The action you want to perform: 
-*IF a user adds a item to his cart, the line item should not be duplicated *
-Now if you read between the lines, matter of speaking, what holds the line_items? which controller model holds those items and adds/deletes them? 
-you're right
 
-> The cart holds the line_items, 
-> meditate on this one:
+
+> if you show a cart, holding the line items, you want the cart to 'hold' the number of times each item is inserted, instead of adding each item again and again. 
+
+
+So, modifying the Cart model (holding the line items) is the way to go.
+Offcourse you could also figure a solution by making the line_item uniq. 
+but that's a different subject.
+
+Let's go 'mental'! 
+the flow:
+> well, we have to check if the line_item allready exists in the cart. 
+> if so, we need to increment the count. 
+> 
+> if the line_item doesn't exists yet, we create it.
+> eater way we should make a check and a assignment.
+> 
+> All right, when do you want the action to take place?
+> -> On the create 
+> Where should the action take place? 
+> -> On the Cart model ( it holds the line_items )
+> The line_items controller knows to which cart it belongs
+> 
+
 
 ```ruby 
 
@@ -185,10 +203,51 @@ class LineItemsController < ApplicationController
 
     def create
         product = Product.find(params[:product_id])
-        @line_item = @cart.add_product(product)
+
+        #here is our ClassInstanceMethod: take note of the product<dot>id
+        @line_item = @cart.add_product(product.id)
     // 
 
 ```
+
+
+
+### Smart migrations, cool stuff.. 
+A bit deeper into programming with ruby.
+
+We need a migration that carefully checks to see if there are any duplicates in line_items in the cart. Now, pay **attention**.. this migration rocks!
+
+```ruby 
+rails g migration combine_items_in_cart
+```
+
+
+```ruby 
+def change 
+    #here is where the magic is gonna happen.
+    def up
+        #nothing special so far, just select all the carts.
+        Cart.each.all do | cart | 
+        #count the occurrences of the line_item in each cart 
+        sums = cart.line_items.group(:product_id).sum(:quantity)
+
+        #Add and remove unnecessary occurrences 
+        sums.each do |product_id, quantity| 
+            if quantity > 1 
+            #remove
+            cart.line_items.where(product_id: product_id).delete_all
+            #replace
+            item = cart.line_items.build(product_id: product_id)
+            item.quantity = quantity 
+            item.save!
+            end
+        end   
+    end    
+end
+```
+
+
+
 
 
 
