@@ -48,7 +48,29 @@ end
 
 
 
+#h3 Chapter 9, Task D:Cart Creation
+Rails makes the current session look like a hash[:hash] to the controller, so we'll store the ID of the cart in the session by indexing it with the symbol for the :cart_id. That way the session will hold a :cart_id
 
+- you do this by making a module with a private method 
+- the method is only available for the controller self. 
+rails will NEVER make it available for a action to the controller
+- it is placed inside the 'concerns' folder of the 'controllers' folder.
+- it will be a module
+- it extends ActiveSupport::Concern
+- will have a ActiveRecord::RecordNotFound rescue 
+
+```ruby 
+module CurrentCart
+extend ActiveSupport::Concern
+    private
+    def set_cart
+        @cart = Cart.find(session[:cart_id])
+        rescue ActiveRecord::RecordNotFound
+        @cart = Cart.create 
+        session[:cart_id] = @cart.id 
+    end
+end
+```
 
 
 ```ruby 
