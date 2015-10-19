@@ -130,7 +130,65 @@ Params are important in rails, they hold the parameters handled between browser 
 In this case we store the corresponding Product.find('item') from the :product_id out of the params in a variable product.
 Then we pass the product to the @cart.line_items.build. to create the relation between the @cart object and the product object. 
 
+### Task E: Chapter 10.1, Creating a smarter Cart 
+The cart is supposed to count the number of items from the same product, en just increment the number of times the item is added to the cart instead of adding complete new line to the db with the same field.. sounds legit!
 
+
+
+```ruby 
+#first create the migration 
+
+rails g migration add_quantity_to_line_items quantity:intger
+# open the migration file and add a default value of ->  default: 1
+
+
+```
+
+
+Meditation time, which controller should be modified, and which model? 
+The action you want to perform: 
+*IF a user adds a item to his cart, the line item should not be duplicated *
+Now if you read between the lines, matter of speaking, what holds the line_items? which controller model holds those items and adds/deletes them? 
+you're right
+
+> The cart holds the line_items, 
+> meditate on this one:
+
+```ruby 
+
+#Model: Cart.rb
+
+class Cart < ActiveRecord::Base
+    #add a line_item to the cart
+    def add_product(product_id)
+        #find the given line_item
+        current_item = line_item.find_by(product_id: product_id)
+        #if it exists
+        if current_item 
+            #increment the quantity
+            current_item.quantity += 1 
+        else
+            #if it doesn't exist, make it!
+            current_item = line_item.build(product_id: product_id)
+        end
+        #oh, and return it tot the controller.
+        current_item
+    end
+```
+
+
+```ruby 
+
+#controller LineItems
+class LineItemsController < ApplicationController
+    // shhizzle 
+
+    def create
+        product = Product.find(params[:product_id])
+        @line_item = @cart.add_product(product)
+    // 
+
+```
 
 
 
