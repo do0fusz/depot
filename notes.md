@@ -246,9 +246,35 @@ def change
 end
 ```
 
+behold the power of nifty ruby methods!
+check the line 'sums = cart.line_items.group(:product_id).sum(:quantity) '
+This holds some awesome magick shortcuts wizzard power (and some!)
+
+**group** selects the elements by the given identifier, and returns a instance
+containing just those objects.
+**sum** then counts the given identifier (quantity) and returns a hash with the result. 
+
+So saying, "i want a sum, with the result of each item in a cart by the number of times each product is in that cart" can be pressed into one line.
+sum = cart.items.group(:itemname).sum(:items)
+cool huh?! 
 
 
+### migrating the down way..
 
+```ruby 
+def down
+    LineItem.where("quantity > 1").each do |line_item|
+        line_item.quantity.times do 
+            LineItem.create (
+                 cart_id: line_item.cart_id, 
+                product_id: line_item.product_id, 
+                quantity: 1  ) 
+            end
+         # don't forget to destroy the left overs
+        line_item.destroy    
+    end
+end
+```
 
 
 
