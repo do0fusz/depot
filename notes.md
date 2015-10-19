@@ -334,6 +334,48 @@ end
 
 
 
+### Total Price features :) 
+Again, some nifty ruby methods chained together to do awesome stuff.
+And a good example of 'name_spacing.'
+
+First, we'd like to have the total_price for each line_items (products * quantity) .
+Second, we'd like a total_price for the sum of all line_items together. (sum of all line_items)
+
+>meditate a moment:  Should this be a method inside the controller? or should this be inside of the model? and which one would you pick for either action?
+
+```ruby 
+# Let's start at the line_items 
+
+# the line items model has access to product, and the price. 
+# A line_item holds a reference to a product_id, so line_item.product.price should return the price, and line_item.product.quantity should give the count of the items. 
+
+# in the line items model:
+class LineItems < ActiveRecord::Base
+    def total_price
+        products * quantity 
+    end
+```
+
+>meditate on this, why should this be enough?
+
+#### Next
+The total price for the Cart, and the good news is.. 
+our LineItems model now has a method called: *total_price*.. 
+Why is that good news?
+
+```ruby 
+
+# answer: the Cart holds several line_items,
+# and each line item now has a method (from the model) for the total_price
+
+class Cart < ActiveRecord::Base
+    def total_price
+        line_items.to_a.sum { |item| item.total_price }
+    end
+```
+
+
+
 
 ```ruby 
 def beer(drinks)
