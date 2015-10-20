@@ -485,6 +485,23 @@ Now the content_tag will execute, with either the css parameters: display:none, 
 
 
 
+### Coffeescript 
+
+For the Clickable image, we are conna use a nice coffescript hack, check it out.
+
+```javascript
+    
+    // In assets/javascript/store.coffee, change it to store.js.coffee
+
+    $(document).on "ready page:change", ->
+        $('.store .entry >img').click ->
+        $(this).parant().find(':submit').click()
+```
+
+That's it! It turns the entire image into a clickable link with a simple javascript (coffee script) action!
+
+
+
 ```ruby 
 def beer(drinks)
     puts "hi beer"
