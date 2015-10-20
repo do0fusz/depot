@@ -19,6 +19,19 @@ class TheControllerTest < ActionController::TestCase
         end
         assert_redirected_to cart_path(assigns(:line_item).cart)
     end
+
+    #testing AJAX calls
+    test "should create upon ajax call" do 
+        assert_difference(LineItems.count) do 
+            xhr :post, :create, product_id: products(:ruby).id 
+        end
+        assert_repsonse success: 
+        assert_select_jquery :html, '#cart' do 
+            assert_select 'tr#current_item td', \/My Awesome Book title\/
+        end
+    end
+
+
 end
 ```
 
@@ -501,6 +514,20 @@ For the Clickable image, we are conna use a nice coffescript hack, check it out.
 That's it! It turns the entire image into a clickable link with a simple javascript (coffee script) action!
 
 
+And testing Javascript is just as easy:
+
+```ruby 
+test "should update with ajax" do 
+    assert_difference(LineItems.count) do 
+        xhr :post, :create, product_id: products(:ruby).id
+    end
+    
+    assert_response :success
+    assert_select_jquery :html, '#cart' do 
+        assert_select 'tr#current_item td', /my awesome book title/ 
+    end
+    # xhr :post vs. simply post, where xhr stands for the XML- HttpRequest mouthful
+```
 
 ```ruby 
 def beer(drinks)
