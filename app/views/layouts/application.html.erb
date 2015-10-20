@@ -15,12 +15,18 @@
 	</div>
 	<div id="columns">
 		<div id="side">
+			<div id="cart">
+				<% hidden_dif_if(@cart.line_items.empty?, id: 'cart') do %>
+					<%= render @cart %>
+				<% end %>
+			</div>
 			<ul>
 				<li><a href="#">Home</a></li>
 				<li><a href="#">FAQ</a></li>
 				<li><a href="#">NEWS</a></li>
 				<li><a href="#">CONTACT</a></li>
 			</ul>
+
 		</div>
 		<div id="emain">
 			<%= yield %>

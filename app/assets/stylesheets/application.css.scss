@@ -48,15 +48,34 @@
 	background: #141;
 	
   #emain {
-		margin-left:17em; 
-		padding: 1em;
+		margin-left:20em; 
+		padding: 2em;
 		background: white;
 	}
 	#side{
 		float: left;
-		padding: 9em 3em;
-		width: 9em;
+		padding: 9em 4em;
+		width: 12em;
 		background: #141;
+
+		form, div{
+			display: inline ; 
+		}
+		input {
+			font-size: small; 
+		}
+		#cart{
+			font-size: smaller;
+			color: white; 
+			table{
+				border-top: 1px dotted #595; 
+				border-bottom: 1px dotted #595; 
+				margin-bottom: 10px;
+			}
+			a{
+				color: red; 
+			}
+		}
 		ul{
 			padding: 0;
 			li{
