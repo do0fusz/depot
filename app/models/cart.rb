@@ -28,9 +28,6 @@ class Cart < ActiveRecord::Base
 		else
 			product.destroy 
 		end
-		# line_item = line_items.find_by(product_id: product)
-		# line_item.quantity -= 1
-		# line_item.save!
 	end
 
 
