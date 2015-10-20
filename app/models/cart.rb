@@ -22,9 +22,15 @@ class Cart < ActiveRecord::Base
 	end
 
 	def remove_product(product)
-		line_item = line_items.find_by(product_id: product)
-		line_item.quantity -= 1
-		line_item.save!
+		if product.quantity > 1 
+			product.quantity -= 1 
+			product.save! 
+		else
+			product.destroy 
+		end
+		# line_item = line_items.find_by(product_id: product)
+		# line_item.quantity -= 1
+		# line_item.save!
 	end
 
 
