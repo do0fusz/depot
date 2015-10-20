@@ -31,6 +31,21 @@ class TheControllerTest < ActionController::TestCase
         end
     end
 
+    #testing the orders, the helper method, 
+    test "Carts should not be empty " do 
+        get :new
+        assert_redirect_to store_url, notice: "hahah"
+    end
+
+    test "Should get a cart if it has items" do 
+        item = LineItem.new
+        item.build_cart 
+        item.product = products(:ruby)
+        item.save
+        session[:cart_id] = item.cart.id 
+        get :new 
+        assert_response :success
+    end
 
 end
 ```
@@ -528,6 +543,26 @@ test "should update with ajax" do
     end
     # xhr :post vs. simply post, where xhr stands for the XML- HttpRequest mouthful
 ```
+
+
+
+### The Order model
+for obvious reasons i skipped the stuff already known to mankind and apes.
+A neat trick i saw,
+
+```ruby
+#in a form for helper, the call is direct on the Order model, Constant of PAYMENT_type, and the prompt: places a dumy in the field.. great stuff. -->
+    <% f.select :pay_type, Order::PAYMENT_TYPE, prompt: "select a payment type"
+
+
+```
+
+
+
+
+
+
+
 
 ```ruby 
 def beer(drinks)
