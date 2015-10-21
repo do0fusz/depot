@@ -553,12 +553,50 @@ A neat trick i saw,
 ```ruby
 #in a form for helper, the call is direct on the Order model, Constant of PAYMENT_type, and the prompt: places a dumy in the field.. great stuff. -->
     <% f.select :pay_type, Order::PAYMENT_TYPE, prompt: "select a payment type"
-
-
 ```
 
 
 
+associations:
+Order has many line_items, that's it.
+you create a new order, 
+and update it with the items from the cart (remember current_cart?)
+controller actions ->
+    @order = Order. new
+    @order.add_line_items_from_cart(@cart)
+
+```ruby 
+class OrdersController < ApplicationController
+    before_action :set_cart
+
+    def create 
+        @order = Order.new 
+        @order.add_line_items_from_cart(@cart)
+
+        if @order.save
+            # don't forget to destroy the CART!
+            # no need to have it around ;)
+            Cart.destroy(session[:cart_id])
+            session[:cart_id] = nil 
+```
+
+
+Now the magic is going to happen in the model of the order, since you made m method call 'add_line.......' 
+
+
+```ruby 
+class Order < ActiveRecord::Base
+    has_many :line_items 
+    def add_line_items_from_cart(cart)
+        cart.line_items.each do |item| 
+            # set the cart item to nil, otherwise it will 
+            # be destroyed when the cart is destroyed! 
+            item.cart_id = nil 
+            line_item << item 
+        end
+    end
+    # that's it! An Order holds line_items,from the @cart
+```
 
 
 
