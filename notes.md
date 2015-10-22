@@ -686,9 +686,27 @@ class OrdersController <ApplicationController
 
 
 ### i - Loggin n, and adding users. 
+Most if this i already know from the hartl tutorial. 
 
+```ruby 
+    
+    class ApplicationController < ApplicationController::Base 
 
+    before_action :authorize 
 
+    protected 
+
+    def authorize 
+        unless User.find_by(user_id: params[:user_id])
+        redirect_to store_url, notice: "do this"
+```
+_
+##### candy: 
+making a scope on the model:
+```ruby
+    scope :beer, ->{ where(availeble: true) }
+    scope :unavailable, ->{ where(available: [nil, false,])}
+```
 
 
 
