@@ -9,6 +9,7 @@ class Product < ActiveRecord::Base
 	}
 
 	has_many :line_items
+	has_many :orders, thourgh: :line_items
 	before_destroy :ensure_not_referenced_by_line_item
 
 	def self.latest 

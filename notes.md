@@ -601,6 +601,25 @@ class Order < ActiveRecord::Base
 
 
 
+A product doesn't have any orders yet, we could make an entirely new model for that but since there is already a model for holding orders that doesn't make sense.
+
+```ruby 
+class Product < ActiveRecord::Base
+    has_many :line_items 
+    has_many :orders, trough: :line_items
+
+```
+
+
+Member routes
+This will perform the who bought action on the member of products. 
+
+```ruby
+resources :products do 
+    get 'who_bought', on: :member
+end
+```
+
 
 ```ruby 
 def beer(drinks)
