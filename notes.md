@@ -710,6 +710,41 @@ making a scope on the model:
 
 
 
+### Enshure one admin remains.
+
+set a hook (before/after) action. 
+define it, raise error, edit controller
+
+```ruby 
+
+    class User < ActiveRecord::Base 
+    after_destroy :enshure_one_remains 
+
+    def enshure_one_remains
+        if User.count.zero? 
+            raise "One admin should remain"  <!-- raise !
+        end
+    end
+
+
+
+    // controller 
+
+    class UsersController < ApplicationController
+        def destroy 
+        begin
+            @user.destroy
+            flash[:notice] = "User #{@user.name} destroyed"
+         rescue StandardError => e 
+            flash[:notice] = e.message  
+
+```
+
+
+
+
+
+
 ```ruby 
 def beer(drinks)
     puts "hi beer"

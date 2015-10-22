@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
 
   protected 
 	  def authorize 
-	  	unless User.find_by(name: session[:name])
+	  	unless User.find_by(id: session[:user_id])
 	  		redirect_to store_url, notice: "please log in"
 	  	end
 	  end

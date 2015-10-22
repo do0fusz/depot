@@ -13,7 +13,7 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
   def login_as(user)
-    session[:name] = users(user).name
+    session[:user_id] = users(user).id
   end
 
   def logout

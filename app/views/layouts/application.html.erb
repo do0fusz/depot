@@ -28,7 +28,13 @@
 				<li><a href="#">NEWS</a></li>
 				<li><a href="#">CONTACT</a></li>
 			</ul>
-
+			<% if session[:user_id] %>
+				<ul>
+					<li><%= link_to 'orders', orders_path %></li>
+					<li><%= link_to 'products', products_path  %></li>
+					<li><%= link_to 'users', users_path	 %></li>
+				</ul>
+			<% end %>
 		</div>
 		<div id="emain">
 			<%= yield %>
