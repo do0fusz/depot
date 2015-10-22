@@ -621,6 +621,75 @@ end
 ```
 
 
+
+
+
+
+
+### H-Sending Email.
+3 steps: 
+    Configure How, 
+    When 
+    What. 
+That easy 
+
+Generate a Mailer and actions, make the Call from the controller 
+`Mailer.Action('variables').deliver `
+:smtp -> Human configurable smtp mailer, like gmail. 
+:sendmail -> System used sendmail /usr/bin, needs -i -t options.
+:test -> won't sent an actual email, array to be accessed through ActionMailer::Base.deliveries
+
+
+You can set up the configuration mailer for each environment, or use the global environment.rb 
+
+```ruby 
+Rails.application.initialize! 
+
+AppName.configure do 
+    config.action_mailer.delivery_method = smtp 
+    config.action_mailer.smtp_settings={
+        address: "smtp.gmail.com",
+        port: 587,
+        domain: "localhost:3000", 
+        authentication: "plain",
+        user_name: "name-something", 
+        password: "password somehting", 
+        enable_starttls_auto: true
+    }
+```
+
+You can run a generator to create a mail action / model / views/ 
+rails g mailer OrderNotifier received shipped 
+
+The OrderNotifier will have the actions received and shiped, you can pass them variables through the create action, like so:
+
+```ruby 
+class OrdersController <ApplicationController
+    //
+    def create
+    //
+        if @order.save
+            //
+            OrderNotifier.received(@order).deliver 
+
+
+## mailer
+
+    def received(order)
+    # give the views their variable
+    @order = order            
+    mail to: order.email, subject: "Hi mail"
+
+
+```
+
+
+
+
+
+
+
+
 ```ruby 
 def beer(drinks)
     puts "hi beer"

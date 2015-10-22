@@ -1,0 +1,11 @@
+<h1>Hi <%= @order.name %></h1>
+
+<p>This is to let you know we shipped the current order</p>
+<table>
+	<tr><th colspan="2">QTY</th><th>Description</th></tr>
+	<%= render @order.line_items -%>
+</table>
+<p>
+  <%= @greeting %>
+</p>
+
