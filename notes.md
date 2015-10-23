@@ -741,9 +741,18 @@ define it, raise error, edit controller
 ```
 
 
+### Internationaliziation (without a gem)
+
+Add scope to router, en nest the 'to be translated' sources in there
+The parentheses mean it's optional. 
 
 
-
+```ruby 
+scope '(:locales)' do 
+    resources :products 
+    resources :titties
+    resources :pages 
+```
 
 ```ruby 
 def beer(drinks)
