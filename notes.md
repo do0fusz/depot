@@ -746,13 +746,79 @@ define it, raise error, edit controller
 Add scope to router, en nest the 'to be translated' sources in there
 The parentheses mean it's optional. 
 
+First: Create an initializer, i18n.rb in the initializer. 
+Serve the default, and a array with options
 
+```ruby 
+// config/initializers/i18n.rb 
+
+i18.default_locale = :en 
+languages = [
+    ['English', 'en'],
+    ['Dutch', 'nl']]
+```
+
+Next, set the routes, make it optional with a pair of '()'
+            ['French', 'fr']]
 ```ruby 
 scope '(:locales)' do 
     resources :products 
     resources :titties
     resources :pages 
+end
+
 ```
+
+Then in the html, just call the translation yaml 
+The translation yaml is indented by the scope it needs to search for.
+Example, the views / store would be views space space store.
+This also goes for number formatting, and activerecord messages. 
+
+ activerecord:
+    errors:
+            messages:
+            inclusion: "no est&aacute; incluido en la lista" blank: "no puede quedar en blanco"
+
+```html 
+<%= t('.item') %>
+```
+
+```yaml
+en:
+    application:
+        title: "This title"
+```
+
+### Selecting the locale.
+
+
+```html 
+<div id="banner">
+    <%= form_tag store_path, class: "locale" do %>
+        <%= select_tag 'set_locale', 
+            options_for_select(LANGUAGES, I18n.locale.to_s), 
+            onchange: 'this.form.submit()' %>
+        <%= submit_tag 'submit' %>
+        <%= javasript_tag "$('.locale input').hide() " %> 
+    <% end %>
+
+</div>
+```
+
+
+Setting the index action in store_controller
+```ruby 
+class StoreController < ApplicationController
+def index 
+    if params[:set_locale] 
+        redirect_to store_url(locale: params[:set_locale])
+    else
+        @products = Product.order(created_at: 'DESC')
+    end
+end
+```
+
+
 
 ```ruby 
 def beer(drinks)

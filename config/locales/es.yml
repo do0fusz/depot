@@ -1,0 +1,25 @@
+es:
+  layouts:
+    application:
+      title: "Publicationes de pragmatic"
+      home: "Inicio"
+      faq: "Preguntas"
+      news: "Noticias"
+      contact: "Contacto"
+
+  store:
+    index:
+      title_html: "Su Cat&aacute;logo de Pragmatic"
+      add_html: "A&ntilde;adir al Carrito"
+  carts:
+    cart:
+      checkout: "Pagar"
+      empty_cart: "Vaciar Carrito"
+number:
+  currency:
+    format:
+      unit: "$us"
+      precision: 2
+      seperator: ","
+      delimiter: "."
+      format: "n&nbsp;%u"

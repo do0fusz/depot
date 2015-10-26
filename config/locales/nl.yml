@@ -1,0 +1,12 @@
+nl:
+  layouts:
+    application:
+      title: "De pragmatische boekenwinkel"
+      home: "thuis"
+      news: "nieuwegeitjes"
+      contact: "bellen ja."
+
+  store:
+    index:
+      add_html: "toevoegen"
+      checkout: "Afrekenen"
