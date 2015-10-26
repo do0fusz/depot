@@ -1,6 +1,18 @@
 
 # personal notes on the Agile web 4 book.
 
+
+You can use the following SFTP credentials to upload your files (using FileZilla/WinSCP/Rsync):
+178.62.178.217
+  * Host: 178.62.178.217
+  * User: rails
+  * Pass: 12uGtdqp4e
+
+You can use the following Postgres database credentials:
+  * User: rails
+  * Pass: HgdY9vDBVy
+
+
 ### TESTING references.
 
 ```ruby
@@ -790,7 +802,6 @@ en:
 ```
 
 ### Selecting the locale.
-
 
 ```html 
 <div id="banner">
