@@ -630,6 +630,14 @@ This will perform the who bought action on the member of products.
 resources :products do 
     get 'who_bought', on: :member
 end
+
+
+THIS is actually very usefull, 
+
+resources :products do 
+    get 'on_sale', on: :products
+    get 'not_available', on: :products
+    get ''
 ```
 
 
@@ -827,6 +835,240 @@ def index
         @products = Product.order(created_at: 'DESC')
     end
 end
+```
+
+
+
+
+### Staging
+Add environment to database.yml and environment file. 
+### Name spacing, 
+rails generate controller Admin::Book action1 action2 ...
+rails generate controller User::Book action1 action2 ...
+
+### ActiveRecord
+The ORM layer for rails, object-relation-model.
+Set the primary key in the model 
+```ruby
+class Book <ActiveRecord::Base
+    self.primary_key = "ISBN"
+```
+
+
+#Relationships
+has_one has_many belongs_to has_and_belongs_to_many 
+
+####Has One
+The model 'Invoice'  ->  belongs_to :order', 
+The model 'order ->   has_one :invoice'. 
+- has_one (has one to zero or one relationship) is implemented by using a foreign_key to reference at most a single row of one other table.
+For example,
+- the model for the table that holds the foreign key will have the belongs_to relationship. In our example the Invoice would hold foreign_key order_id. 
+####Has Many
+The model 'order -> has_many :line_items'
+The model 'line_item -> belongs_to :order'
+-Allows to represent a collection of objects
+-Foreign key again is applied to the child object.
+####Has and Belongs to Many
+The model product -> has_and_belongs_to_many :category 
+the model category -> has_and_belongs_to_many :product
+-The relationship states that any model contains multiple objects of the table from the other side, and vice versa.
+-Naming: Joint_table naming is alphabetical, example: Order.categorys_products
+
+
+
+### Create new Rows (objects)
+```ruby 
+
+# Create new Rows(objects) with a variable (new_object)
+new_object = Order.new
+new_object.name = "Object name"
+new_object.price = 23
+new_object.save 
+
+# Create new Rows(objects) with a bloc 
+Order.new do |o|
+    o.name = "object name"
+    o.price = 23 
+    o.save
+end
+
+# Create new objects from a hash, good for interacting with the view :) 
+# create() will initiate and save() the object.
+new_object = Object.create(
+        name: "Object name",
+        price: 23 )
+# create new Rows(objects) from an array of hashes.
+new_object = Object.create(
+    [ {name: "Object name", price: 23}, 
+      {name: "second object", price: 24 } ])
+
+```
+
+
+## Quering SQL 
+```ruby  
+    # insert question marks as template holders. 
+    name = params[:name]
+    type = params[:pay_type]
+    pos = Orders.where("name = :name and pay_type = :type", name: name, type: type)
+
+    pos = Orders.where("name = :name and pay_type = :pay_type", params[:order])
+
+
+    class Order < ActiveRecord::Base 
+
+    def Order.find_on_page(page_num, page_size)
+        order(:id).limit(page_size).offset(page_num * page_size)
+
+    scope last_n_days, lambda { |days| where('updated_at > ?', days) }    
+    scope checks, -> { where(payment_type: :check) }
+    # Order.last_n_days(45) -> Orders from the last 45 days
+    # Order.checks.last_n_days(5) -> Order with paytype check of last 5 days.
+
+    # Order.find by sql by sql 
+    order = Order.find_by_sql("select name, pay_type, from orders")
+    first = orders[0]
+    first.attributes
+    first.attribute_names
+    first.attribute_present?("beer")
+```
+
+```ruby
+
+class Account <ActiveRecord::Base 
+    validates :balance, numbericality: {greater_than_or_equal_to: 0 }
+    def withdraw(amount)
+        adjust_balance_and_save!(-amount)
+    end
+    def deposit(amount)
+        adjust_balance_and_save!(amount)
+    end
+    private
+    def adjust_balance_and_save!(amount)
+        self.balance += amount 
+        save! # <!-- use the save! to raise error on exception. 
+    end
+end
+
+# The 'transaction' method will save to the database unless a exception is raised within the block. 
+begin
+    Account.transaction do # transaction is a sql method that 
+    user.deposit(259)
+    user.withdraw(390)
+    end
+rescue 
+    puts "Transfor aborted"
+end
+
+```
+
+
+###Action Dispatch and Action Controller
+ActionDispatch routes requests to controller
+ActionController converts requests into responses 
+ActivonView is used by the action controller to format the responses.
+
+```ruby
+routes are awesome
+
+resources products do
+    resources reviews
+    end
+end
+
+# now you'll have a resources_reciews_path' that points to 
+# /products/:product_id/reviews/:id 
+
+# concern will produce a reusable block
+concern :revieweble do
+    resources :reviews
+end
+resources :products, concern: :reviewable 
+resources :users, concern: :reviewable 
+
+# shallow resources makes url smaller
+resources :products, shallow: true do
+    resources :reviews
+end
+```
+
+
+
+#Render Redirect 
+
+```ruby 
+render(text: "hello")
+render(action: :name)
+render(template: "/controller/action", [locals: hash])
+render(partial: :name)
+render(xml: stuff)
+render(json: stuff, [callback: hash])
+render(:update) do |page| #RJS block.
+
+send_data(data,options)  # Or send_file
+    def sales_graph
+        png_data = Sales.plot_for(Date.today.month)
+        send_data(png_data, type: "img/png", disposition: "inline")
+    end
+
+redirect_to(action: 'parent_action') <-- WRONG bad practice, see foot note.
+redirect_to(actions: ... , options: ... )
+redirect_to(path)
+redirect_to(:back)
+# wrong! 301 - 307 
+#Dont use redirect_to Upon child of a parent, when the create using a redirect, this will leave the browser thinking there will still be a response on the get request. 
+
+
+
+
+# VIEWS
+#
+ #You can attach images to forms, by using multipart: true 
+<%= form_for(:picture, url: {action: 'save'}, 
+                      html: {multipart: true}) do |form| %>
+  "upload Picture" <%= form.file_field("upload picutre") %>
+<% end %>                                                               %>
+
+```
+
+
+
+### Layout per controller
+```ruby 
+# This will give the controller a seperate layout per deterimination. 
+class BooksController < ApplicationController
+    layout :determine_layout
+
+    private
+    def deterimine_layout
+        if Store.is_closed?
+            "store_down"
+        else
+            "standard"
+        end
+    end
+end
+```
+
+
+
+```ruby 
+# This will iterate over the collection. 
+<%= render( partial: 'animal',
+            collection: %w{ant bee cat dog elk},) 
+
+# This wil render a shared partial and provide a local. 
+<%= render("shared/header", locals: {title: @article.title })            
+
+# This will also render shared statement
+<%= render(partial: "shared/post", object: @article )
+
+# partial with layouts
+<%= render partial: "user", layout: "administrator"
+
+# partial with layout block
+<%= render layout: "administrator" do 
 ```
 
 
