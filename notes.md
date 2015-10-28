@@ -2,17 +2,6 @@
 # personal notes on the Agile web 4 book.
 
 
-You can use the following SFTP credentials to upload your files (using FileZilla/WinSCP/Rsync):
-178.62.178.217
-  * Host: 178.62.178.217
-  * User: rails
-  * Pass: 12uGtdqp4e
-
-You can use the following Postgres database credentials:
-  * User: rails
-  * Pass: HgdY9vDBVy
-
-
 ### TESTING references.
 
 ```ruby
@@ -78,7 +67,7 @@ On the model you create method for self (think about it) to sort and order the p
 class Product < ActiveRecord::Base
     // validations 
     def self.latest 
-     Product.order(:updated_at).ast 
+     Product.order(:updated_at).last 
     end
 end
 ```
@@ -94,8 +83,7 @@ end
             <div class="entry">
 ```
 
-
-
+# 
 ###  Chapter 9, Task D:Cart Creation
 Rails makes the current session look like a hash[:hash] to the controller, so we'll store the ID of the cart in the session by indexing it with the symbol for the :cart_id. That way the session will hold a :cart_id
 
@@ -166,7 +154,7 @@ class LineItemsController< ApplicationController
     # The BUILD method will build the object @line_item through the cart item and the product
 ```
 
-Params are important in rails, they hold the parameters handled between browser requests and controllers. 
+
 In this case we store the corresponding Product.find('item') from the :product_id out of the params in a variable product.
 Then we pass the product to the @cart.line_items.build. to create the relation between the @cart object and the product object. 
 
@@ -198,7 +186,7 @@ but that's a different subject.
 
 Let's go 'mental'! 
 the flow:
-> well, we have to check if the line_item allready exists in the cart. 
+> well, we have to check if the line_item all ready exists in the cart. 
 > if so, we need to increment the count. 
 > 
 > if the line_item doesn't exists yet, we create it.
@@ -1113,8 +1101,68 @@ order.name
 require "config/environment.rb"
 order = Order.find(1)
 
+```
+
+
+
+
+```ruby 
+
+"run rackup 'file.rb"
+
+"The rackup file (store.ru): "
+require 'rubygems'
+require 'bundler/setup'
+require './store' <--- our store file 
+
+use Rack::ShowExceptions
+
+map '/store' do 
+    run StoreApp.new
+end
+
+
+
+"the store file:"
+require 'builder'
+require 'active_record'
+
+ActiveRecord::Base.establish_connection(
+    adapter: 'sqlite3',
+    database: 'db/development/sqlite3')
+
+class Product < ActiveRecord::Base
+end
+
+class StoreApp
+    def call(env)
+        x = Builder::XmlMarkup.new :indent=>2
+        x.declare! :DOCTYPE, :html
+        x.html do 
+            x.head do 
+                x.title "store"
+            end
+            x.body do
+                x.h1 "store"
+                Product.all do |product|
+                    x.h2 product.title 
+                    x << " #{product.description} \n"
+                    x.p product.price
+                end
+            end
+        end
+        response = Rack::Response.new(x.target!)
+        response['Content-type'] = 'text/html'
+        response.finish
+    end
+end    
 
 ```
+
+
+
+### RAKE
+$ rake --trace --dry-run db:migrate 
 
 
 ```ruby 
