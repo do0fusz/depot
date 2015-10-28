@@ -1073,6 +1073,50 @@ end
 
 
 
+### Mirgrations, Databasefield 
+add_column :orders, :attn, :string, limit: 10
+add_column :orders, :order_type, :integer
+add_column :orders, :ship_class, :string, null: false, default: 'priority'
+add_column :orders, :price, :decimal, precision: 2, scale: 2 
+
+
+add_index :orders, :name [unique: true]
+
+
+
+wiki
+callbacks: provide a hook into the life cycle of an object. 
+concern / dependencies: help manage dependencies in a modular way.
+railtie: defines core objects for the abb to suport on. 
+rescueable: eases exception handling
+Time and TimeWithZone: helpers for Time and Timezone.
+
+
+### Non web applications
+```ruby
+
+"The hard way"
+
+require'active_record'
+ActiveRecord::Base.establish_connection(adapter: "sqlite3", database: "         db/develoment.sqlite3")
+
+class Order < ActiveRecord::Base
+end
+
+#that's it!
+order = Order.find(1)
+order.name
+
+
+"The easy way"
+
+require "config/environment.rb"
+order = Order.find(1)
+
+
+```
+
+
 ```ruby 
 def beer(drinks)
     puts "hi beer"
