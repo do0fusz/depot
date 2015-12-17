@@ -276,7 +276,6 @@ end
 
 behold the power of nifty ruby methods!
 check the line 'sums = cart.line_items.group(:product_id).sum(:quantity) '
-This holds some awesome magick shortcuts wizzard power (and some!)
 
 **group** selects the elements by the given identifier, and returns a instance
 containing just those objects.
@@ -363,7 +362,6 @@ end
 
 
 ### Total Price features :) 
-Again, some nifty ruby methods chained together to do awesome stuff.
 And a good example of 'name_spacing.'
 
 First, we'd like to have the total_price for each line_items (products * quantity) .
@@ -407,17 +405,10 @@ class Cart < ActiveRecord::Base
 
 ### PLAYTIME! 
 Mission: Delete the line_item from the cart. 
-Bonus: Don't delete the entire line_item, but just one item from that line item.
-
-Now this took me a few hours, because of all the relational bindings between objects, and the mission to keep it in the Model.
-
-Logic: Tell the controller which line_item, what product, in what cart to delete.
-
-We already have a helper method that sets the current_cart, and the line_items controller also sets the @line_item for us. So, we are only missing the product.
 
 ```html 
+
 <% @items. each do |item| %> 
-    // blabla 
     #tell the controller what item we are handeling
     <%= button_to 'delete', line_item_path(item), method: :delete %>
 ```
@@ -462,11 +453,9 @@ class Cart < ActiveRecord::Base
 >  or something awesome like JavaScript Object Notation [JSON]).
 
 Cool, let's make browser response a bit smarter 
-
-start by telling the views to handle not html request but ajax. 
 Add the 'remote: true' parameter to the action. 
 
-browser’s internal representation of the structure and content of the document being displayed, namely, the Document Object Model (DOM)
+The BROWSER's *internal* representation of the structure and content of the document being displayed, namely, the ~Document Object Model~ (DOM)
 
 
 ```javascript
@@ -506,16 +495,16 @@ From the documentation of the 'content_tag':
 *content_tag(name, content_or_options_with_block = nil, options = nil, escape = true, &block)*
 '... you can also use a block in which case, you pass your options as the second parameter...'
 
-So what happens in the above issue is the module helper assigns the passed css id: 'id="car"' to the parameters={} of the hidden_div_if method.
-The if statement (duhh) executes when true (so if the @cart.line_items.empty?) and will set attributes of style to "display: none".
-Now the content_tag will execute, with either the css parameters: display:none, or 'id: "cart" ', it will return a 'div' element and execute the block passed to the content_tag. In this case, the render @cart is the &block.
+- So what happens in the above issue is the module helper assigns the passed css id: 'id="car"' to the parameters={} of the hidden_div_if method.
+- The if statement executes when true (so if the @cart.line_items.empty?) and will set attributes of style to "display: none".
+- Now the content_tag will execute, with either the css parameters: display:none, or 'id: "cart" ', it will return a 'div' element and execute the block passed to the content_tag. In this case, the render @cart is the &block.
 (a &block is just a chunk of code to be iterated in this case.)
 
 
 
 ### Coffeescript 
 
-For the Clickable image, we are conna use a nice coffescript hack, check it out.
+For the Clickable image, we are gonna use a nice coffeescript hack, check it out.
 
 ```javascript
     
@@ -526,8 +515,8 @@ For the Clickable image, we are conna use a nice coffescript hack, check it out.
         $(this).parant().find(':submit').click()
 ```
 
-That's it! It turns the entire image into a clickable link with a simple javascript (coffee script) action!
-
+That's it! It turns the entire image into a click-able link with a simple javascript (coffee script) action!
+    
 
 And testing Javascript is just as easy:
 
@@ -1072,12 +1061,12 @@ add_index :orders, :name [unique: true]
 
 
 
-wiki
-callbacks: provide a hook into the life cycle of an object. 
-concern / dependencies: help manage dependencies in a modular way.
-railtie: defines core objects for the abb to suport on. 
-rescueable: eases exception handling
-Time and TimeWithZone: helpers for Time and Timezone.
+Wiki.
+*callbacks*: provide a hook into the life cycle of an object. 
+*concern / dependencies*: help manage dependencies in a modular way.
+*railtie*: defines core objects for the abb to suport on. 
+*rescueable*: eases exception handling
+*Time and TimeWithZone*: helpers for Time and Timezone.
 
 
 ### Non web applications
@@ -1159,24 +1148,3 @@ end
 
 ```
 
-
-
-### RAKE
-$ rake --trace --dry-run db:migrate 
-
-
-```ruby 
-def beer(drinks)
-    puts "hi beer"
-end
-```
-
-
-[ ]stuff to do 
-`strike through use the ~`
-#h1 
-##h2 
-###h3
-[linkg](http://dothis/"link")
-
-> 'block >'
